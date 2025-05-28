@@ -1,0 +1,51 @@
+-- Users table (extends Supabase auth)
+create table public.users (
+  id uuid references auth.users on delete cascade,
+  name text,
+  phone text,
+  gender text,
+  rides_given integer default 0,
+  rides_taken integer default 0,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  primary key (id)
+);
+
+-- Vehicle types table
+create table public.vehicle_types (
+  id uuid default uuid_generate_v4() primary key,
+  name text not null,
+  total_seats integer not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Insert default vehicle types
+insert into public.vehicle_types (name, total_seats) values
+  ('Hatchback', 3),
+  ('Sedan', 4),
+  ('SUV', 7),
+  ('Van', 8);
+
+-- Rides table
+create table public.rides (
+  id uuid default uuid_generate_v4() primary key,
+  driver_id uuid references public.users not null,
+  source jsonb not null,
+  destination jsonb not null,
+  vehicle_type_id uuid references public.vehicle_types not null,
+  available_seats integer not null,
+  fare numeric not null,
+  female_only boolean default false,
+  status text default 'active',
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Bookings table
+create table public.bookings (
+  id uuid default uuid_generate_v4() primary key,
+  ride_id uuid references public.rides not null,
+  rider_id uuid references public.users not null,
+  pickup_point jsonb not null,
+  seats_booked integer not null default 1,
+  status text default 'pending',
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
