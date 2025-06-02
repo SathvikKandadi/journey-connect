@@ -292,6 +292,12 @@ export default function TakeRideScreen() {
           <Text style={styles.errorText}>{error}</Text>
         ) : null}
 
+        <Button
+          title="View My Booked Rides"
+          onPress={() => router.push('/my-rides')}
+          containerStyle={styles.buttonContainer}
+        />
+
         {loading ? (
           <Text>Loading...</Text>
         ) : rides.length > 0 ? (
@@ -303,6 +309,7 @@ export default function TakeRideScreen() {
               <Text style={styles.rideInfo}>Vehicle: {ride.vehicle_types?.name}</Text>
               <Text style={styles.rideInfo}>Available Seats: {ride.available_seats}</Text>
               <Text style={styles.rideInfo}>Fare: ${ride.fare}</Text>
+              <Text style={styles.rideInfo}>Female Only: {ride.female_only ? 'Yes' : 'No'}</Text>
               <Text style={styles.rideInfo}>
                 <Text style={styles.label}>From:</Text> {ride.sourceAddress}
               </Text>
